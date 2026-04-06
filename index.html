@@ -1030,6 +1030,128 @@
     transition: all 0.15s;
   }
   .suggestion-apply:hover { background: rgba(45,212,191,0.2); }
+
+  /* ── FEEDBACK POPUP ── */
+  .feedback-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 0 32px;
+  }
+  .feedback-overlay.open { display: flex; }
+
+  .feedback-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    width: 100%;
+    max-width: 420px;
+    animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .feedback-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .feedback-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .feedback-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .feedback-dismiss {
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 2px 6px;
+    line-height: 1;
+  }
+  .feedback-dismiss:hover { color: var(--text); }
+
+  .stars-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .star-btn {
+    font-size: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s;
+    filter: grayscale(1) opacity(0.3);
+    line-height: 1;
+    padding: 2px;
+  }
+
+  .star-btn:hover,
+  .star-btn.lit { filter: grayscale(0) opacity(1); transform: scale(1.15); }
+
+  .feedback-comment {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 13px;
+    padding: 10px 12px;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+    margin-bottom: 12px;
+    display: none;
+  }
+  .feedback-comment.show { display: block; }
+  .feedback-comment:focus { border-color: var(--accent); }
+
+  .feedback-submit {
+    width: 100%;
+    padding: 11px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: linear-gradient(135deg, var(--accent), #5a52c8);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    display: none;
+  }
+  .feedback-submit.show { display: block; }
+  .feedback-submit:hover { opacity: 0.9; }
+
+  .feedback-thankyou {
+    text-align: center;
+    padding: 8px 0 4px;
+    display: none;
+  }
+  .feedback-thankyou.show { display: block; }
+  .feedback-thankyou .ty-emoji { font-size: 36px; margin-bottom: 8px; }
+  .feedback-thankyou p { font-size: 14px; color: var(--text2); }
 </style>
 </head>
 <body>
@@ -1210,6 +1332,44 @@
     </div>
 
   </div><!-- /main-layout -->
+
+<!-- Feedback Popup -->
+<div class="feedback-overlay" id="feedbackOverlay">
+  <div class="feedback-card">
+
+    <div id="feedbackForm">
+      <div class="feedback-top">
+        <div>
+          <div class="feedback-title">How useful was this roadmap?</div>
+        </div>
+        <button class="feedback-dismiss" onclick="closeFeedback()">✕</button>
+      </div>
+      <div class="feedback-sub">Your feedback helps improve SkillPath for everyone.</div>
+
+      <div class="stars-row" id="starsRow">
+        <button class="star-btn" data-val="1" onclick="selectStar(1)">⭐</button>
+        <button class="star-btn" data-val="2" onclick="selectStar(2)">⭐</button>
+        <button class="star-btn" data-val="3" onclick="selectStar(3)">⭐</button>
+        <button class="star-btn" data-val="4" onclick="selectStar(4)">⭐</button>
+        <button class="star-btn" data-val="5" onclick="selectStar(5)">⭐</button>
+      </div>
+
+      <textarea class="feedback-comment" id="feedbackComment" rows="3"
+        placeholder="Anything we could improve? (optional)"></textarea>
+
+      <button class="feedback-submit" id="feedbackSubmit" onclick="submitFeedback()">
+        Submit feedback
+      </button>
+    </div>
+
+    <div class="feedback-thankyou" id="feedbackThankyou">
+      <div class="ty-emoji">🙏</div>
+      <p>Thank you — your feedback has been recorded.</p>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- /app -->
 
 <script>
@@ -1662,6 +1822,7 @@ function renderRoadmap(data) {
   // Mark step 3 done
   document.getElementById('step3').classList.add('done');
   document.getElementById('step3').classList.remove('active');
+  scheduleFeedback();
 }
 
 function printRoadmap() {
@@ -1863,6 +2024,85 @@ function applySuggestion() {
     updateGenerateBtn();
   }
   document.getElementById('roleSuggestion').classList.remove('show');
+}
+
+
+// ── FEEDBACK ─────────────────────────────────────────────────────────────────
+// Replace SHEET_URL below with your Google Apps Script Web App URL (see instructions)
+const FEEDBACK_SHEET_URL = 'YOUR_GOOGLE_SCRIPT_URL';
+
+let feedbackRating = 0;
+let feedbackTimer = null;
+
+function openFeedback() {
+  feedbackRating = 0;
+  document.getElementById('feedbackForm').style.display = '';
+  document.getElementById('feedbackThankyou').classList.remove('show');
+  document.getElementById('feedbackComment').classList.remove('show');
+  document.getElementById('feedbackSubmit').classList.remove('show');
+  document.getElementById('feedbackComment').value = '';
+  // Reset stars
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('lit'));
+  document.getElementById('feedbackOverlay').classList.add('open');
+}
+
+function closeFeedback() {
+  document.getElementById('feedbackOverlay').classList.remove('open');
+  if (feedbackTimer) clearTimeout(feedbackTimer);
+}
+
+function selectStar(val) {
+  feedbackRating = val;
+  document.querySelectorAll('.star-btn').forEach(b => {
+    b.classList.toggle('lit', parseInt(b.dataset.val) <= val);
+  });
+  document.getElementById('feedbackComment').classList.add('show');
+  document.getElementById('feedbackSubmit').classList.add('show');
+}
+
+async function submitFeedback() {
+  const comment = document.getElementById('feedbackComment').value.trim();
+  const btn = document.getElementById('feedbackSubmit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  // Save locally always
+  const entry = {
+    rating: feedbackRating,
+    comment,
+    role: selectedGoal || 'unknown',
+    level: selectedLevel || 'unknown',
+    timestamp: new Date().toISOString()
+  };
+
+  // Store in localStorage for local analytics
+  try {
+    const existing = JSON.parse(localStorage.getItem('sp_feedback') || '[]');
+    existing.push(entry);
+    localStorage.setItem('sp_feedback', JSON.stringify(existing));
+  } catch(e) {}
+
+  // Send to Google Sheet if URL is configured
+  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbw7gYsRr1pVg4MWwZDwIsPgwpY6npRsv1WIXcR-g18QBf0LN4lTFg_YXfGuPNJjJHkb/exec') {
+    try {
+      await fetch(FEEDBACK_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      });
+    } catch(e) {}
+  }
+
+  document.getElementById('feedbackForm').style.display = 'none';
+  document.getElementById('feedbackThankyou').classList.add('show');
+  setTimeout(() => closeFeedback(), 2000);
+}
+
+// Trigger feedback 4 seconds after roadmap renders
+function scheduleFeedback() {
+  if (feedbackTimer) clearTimeout(feedbackTimer);
+  feedbackTimer = setTimeout(() => openFeedback(), 4000);
 }
 
 init();
