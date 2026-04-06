@@ -2084,7 +2084,7 @@ async function submitFeedback() {
   } catch(e) {}
 
   // Send to Google Sheet if URL is configured
-  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL.includes('macros')) {
+  if (FEEDBACK_SHEET_URL) {
     try {
       await fetch(FEEDBACK_SHEET_URL, {
         method: 'POST',
