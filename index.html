@@ -2029,7 +2029,7 @@ function applySuggestion() {
 
 // ── FEEDBACK ─────────────────────────────────────────────────────────────────
 // Replace SHEET_URL below with your Google Apps Script Web App URL (see instructions)
-const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwF3CRaNpo9gK2yvNQGbCwAf1gYB5SuVR_iLC9p7NoJOw9u5wNwEZO6Kmbe1ltFnbPc/exec';
+const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwv4BH9TjCeVyva8sT6Ricfwp0_MuGSyRgh2vzyVVFeMMaLz1KxGx7jxFdKKRHIRA0/exec';
 
 let feedbackRating = 0;
 let feedbackTimer = null;
@@ -2083,7 +2083,7 @@ async function submitFeedback() {
   } catch(e) {}
 
   // Send to Google Sheet via GET params (avoids CORS issues with Apps Script)
-  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbwF3CRaNpo9gK2yvNQGbCwAf1gYB5SuVR_iLC9p7NoJOw9u5wNwEZO6Kmbe1ltFnbPc/exec') {
+  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'YOUR_GOOGLE_SCRIPT_URL') {
     try {
       const params = new URLSearchParams({
         timestamp: entry.timestamp,
