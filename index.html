@@ -1448,19 +1448,26 @@ async function generateRoadmap() {
 
     clearInterval(msgInterval);
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(`API error ${response.status}`);
+      // Show the real Anthropic error message for easier debugging
+      const detail = data?.error?.message || data?.error || JSON.stringify(data);
+      throw new Error(`API ${response.status}: ${detail}`);
     }
 
-    const data = await response.json();
     const text = data.content?.find(c => c.type === 'text')?.text || '';
+
+    if (!text) {
+      throw new Error('Empty response from API — check your API key has credits');
+    }
 
     let roadmap;
     try {
       const clean = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
       roadmap = JSON.parse(clean);
     } catch(e) {
-      throw new Error('Failed to parse roadmap JSON');
+      throw new Error('Could not parse roadmap. Raw: ' + text.slice(0, 200));
     }
 
     document.getElementById('loadingState').classList.remove('active');
@@ -1470,7 +1477,7 @@ async function generateRoadmap() {
     clearInterval(msgInterval);
     document.getElementById('loadingState').classList.remove('active');
     document.getElementById('errorState').classList.add('active');
-    document.getElementById('errorMsg').textContent = 'Could not generate your roadmap. Make sure you have a valid API connection.';
+    document.getElementById('errorMsg').textContent = 'Could not generate roadmap.';
     document.getElementById('errorDetail').textContent = err.message;
   }
 }
