@@ -2070,7 +2070,7 @@ async function submitFeedback() {
   // Save locally always
   const entry = {
     rating: feedbackRating,
-    comment,
+    comment: comment,
     role: selectedGoal || 'unknown',
     level: selectedLevel || 'unknown',
     timestamp: new Date().toISOString()
