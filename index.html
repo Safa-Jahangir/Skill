@@ -243,21 +243,22 @@
 
   .goal-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 7px;
   }
 
   .goal-btn {
-    padding: 10px 8px;
+    padding: 9px 6px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: var(--bg3);
     color: var(--text2);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
     text-align: center;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1090,16 +1091,24 @@
               <i class="fas fa-layer-group"></i>Full Stack
             </button>
             <button class="goal-btn" data-goal="Data Scientist" onclick="selectGoal(this)">
-              <i class="fas fa-chart-scatter-3d"></i>Data Scientist
+              <i class="fas fa-chart-bar"></i>Data Scientist
+            </button>
+            <button class="goal-btn" data-goal="Data Engineer" onclick="selectGoal(this)"><i class="fas fa-database"></i>Data Engineer
+            </button>
+            <button class="goal-btn" data-goal="AI Engineer" onclick="selectGoal(this)"><i class="fas fa-microchip"></i>AI Engineer
+            </button>
+            <button class="goal-btn" data-goal="Machine Learning Engineer" onclick="selectGoal(this)">
+              <i class="fas fa-brain"></i>ML Engineer
+            </button>
+            <button class="goal-btn" data-goal="Cybersecurity Engineer" onclick="selectGoal(this)"><i class="fas fa-shield-halved"></i>Cybersecurity
+            </button>
+            <button class="goal-btn" data-goal="Cloud Architect" onclick="selectGoal(this)"><i class="fas fa-cloud"></i>Cloud Architect
             </button>
             <button class="goal-btn" data-goal="DevOps Engineer" onclick="selectGoal(this)">
               <i class="fas fa-infinity"></i>DevOps
             </button>
             <button class="goal-btn" data-goal="Mobile Developer" onclick="selectGoal(this)">
               <i class="fas fa-mobile-screen"></i>Mobile Dev
-            </button>
-            <button class="goal-btn" data-goal="Machine Learning Engineer" onclick="selectGoal(this)">
-              <i class="fas fa-brain"></i>ML Engineer
             </button>
             <button class="goal-btn" data-goal="Product Manager" onclick="selectGoal(this)">
               <i class="fas fa-bullseye"></i>Product Mgr
@@ -1736,6 +1745,33 @@ const SKILL_ROLE_MAP = {
   'communication':  { product: 1 },
   'leadership':     { product: 2 },
 
+  // Cybersecurity signals
+  'cybersecurity':       { cyber: 3, backend: 1 },
+  'computer-networks':   { cyber: 2, cloud: 1, devops: 1 },
+  'operating-systems':   { cyber: 2, devops: 1 },
+
+  // Cloud signals
+  'cloud-computing':     { cloud: 3, devops: 2 },
+  'aws':                 { cloud: 3, devops: 2, backend: 1 },
+  'azure':               { cloud: 3, devops: 2, backend: 1 },
+  'google-cloud':        { cloud: 3, devops: 2, backend: 1 },
+  'kubernetes':          { cloud: 2, devops: 3 },
+  'docker':              { cloud: 1, devops: 3 },
+
+  // Data Engineering signals
+  'data-management':     { dataeng: 3, data: 2 },
+  'database-design':     { dataeng: 3, backend: 2 },
+  'postgresql':          { dataeng: 2, backend: 2, fullstack: 1 },
+  'mysql':               { dataeng: 2, backend: 2, fullstack: 1 },
+  'sql':                 { dataeng: 2, data: 2, backend: 1 },
+  'mongodb':             { dataeng: 2, backend: 2 },
+
+  // AI Engineer signals
+  'ai-ml-fundamentals':  { ai: 3, ml: 2, data: 1 },
+  'tensorflow':          { ai: 2, ml: 3 },
+  'pytorch':             { ai: 2, ml: 3 },
+  'python-data':         { ai: 1, ml: 2, data: 3 },
+
   // DB signals
   'sql':            { backend: 1, data: 1, fullstack: 1 },
   'mysql':          { backend: 2, fullstack: 1 },
@@ -1763,6 +1799,10 @@ const ROLE_INFO = {
   devops:    { label: 'DevOps Engineer',             icon: '🔧', reason: 'Cloud, containers and automation tools are classic DevOps skills.' },
   mobile:    { label: 'Mobile Developer',            icon: '📱', reason: 'Mobile frameworks like Flutter or React Native point to a mobile dev path.' },
   product:   { label: 'Product Manager',             icon: '🎯', reason: 'Leadership, agile and business skills suggest a product management direction.' },
+  cyber:     { label: 'Cybersecurity Engineer',      icon: '🔐', reason: 'Networking, OS, Linux and security tools in your skills point strongly to cybersecurity.' },
+  cloud:     { label: 'Cloud Architect',             icon: '☁️',  reason: 'Cloud platforms, containers and infrastructure skills align with cloud architecture.' },
+  dataeng:   { label: 'Data Engineer',               icon: '🗄️',  reason: 'SQL, pipeline and data management skills point to a data engineering path.' },
+  ai:        { label: 'AI Engineer',                 icon: '🤖', reason: 'AI fundamentals, ML frameworks and Python point to an AI engineering role.' },
 };
 
 let suggestedRole = null;
@@ -1770,7 +1810,7 @@ let suggestedRole = null;
 function computeSuggestedRole() {
   if (selectedSkills.size < 2) return null;
 
-  const scores = { frontend:0, backend:0, fullstack:0, data:0, ml:0, devops:0, mobile:0, product:0 };
+  const scores = { frontend:0, backend:0, fullstack:0, data:0, ml:0, devops:0, mobile:0, product:0, cyber:0, cloud:0, dataeng:0, ai:0 };
 
   selectedSkills.forEach(id => {
     const map = SKILL_ROLE_MAP[id];
