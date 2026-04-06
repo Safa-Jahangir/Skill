@@ -2083,7 +2083,7 @@ async function submitFeedback() {
   } catch(e) {}
 
   // Send to Google Sheet if URL is configured
-  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbzfm-o_jzEhJO8QL5wCvkxN0KnFXnG8Ftta4ee6EWf0NQ9lJoa_9_gyMyvNXk9ns6J_/exec') {
+  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbzhDwF4pahTJk1kYJLMyKYhYSNfTGsJjnJl5uA_AilmfmCqrnrly_pC6KGQGsTLbRCR/exec') {
     try {
       await fetch(FEEDBACK_SHEET_URL, {
         method: 'POST',
