@@ -1661,7 +1661,6 @@ async function generateRoadmap() {
     }
   }, 1200);
 
-  
   const allSkills = CATEGORIES.flatMap(c => c.skills);
   const selectedNames = [...selectedSkills].map(id => allSkills.find(s => s.id === id)?.name).filter(Boolean);
 
@@ -2030,7 +2029,7 @@ function applySuggestion() {
 
 // ── FEEDBACK ─────────────────────────────────────────────────────────────────
 // Replace SHEET_URL below with your Google Apps Script Web App URL (see instructions)
-const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzBMCofUAuH9KApWSMFtjlC27z9yLaK1bAGOqpqPS1lZUDWwqoXnUdYsJt8SdzwKVH0/exec';
+const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwF3CRaNpo9gK2yvNQGbCwAf1gYB5SuVR_iLC9p7NoJOw9u5wNwEZO6Kmbe1ltFnbPc/exec';
 
 let feedbackRating = 0;
 let feedbackTimer = null;
@@ -2070,10 +2069,10 @@ async function submitFeedback() {
   // Save locally always
   const entry = {
     rating: feedbackRating,
-    comment: comment,
+    comment,
     role: selectedGoal || 'unknown',
     level: selectedLevel || 'unknown',
-    timestamp: new Date().toLocaleString()
+    timestamp: new Date().toISOString()
   };
 
   // Store in localStorage for local analytics
@@ -2083,14 +2082,19 @@ async function submitFeedback() {
     localStorage.setItem('sp_feedback', JSON.stringify(existing));
   } catch(e) {}
 
-  // Send to Google Sheet if URL is configured
-  if (FEEDBACK_SHEET_URL) {
+  // Send to Google Sheet via GET params (avoids CORS issues with Apps Script)
+  if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'https://script.google.com/macros/s/AKfycbwF3CRaNpo9gK2yvNQGbCwAf1gYB5SuVR_iLC9p7NoJOw9u5wNwEZO6Kmbe1ltFnbPc/exec') {
     try {
-      await fetch(FEEDBACK_SHEET_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(entry)
+      const params = new URLSearchParams({
+        timestamp: entry.timestamp,
+        rating: entry.rating,
+        role: entry.role,
+        level: entry.level,
+        comment: entry.comment
+      });
+      await fetch(FEEDBACK_SHEET_URL + '?' + params.toString(), {
+        method: 'GET',
+        mode: 'no-cors'
       });
     } catch(e) {}
   }
