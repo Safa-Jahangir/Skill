@@ -1483,50 +1483,14 @@ async function generateRoadmap() {
 }
 
 function buildPrompt(goal, level, skills) {
-  return `You are a world-class career coach and curriculum designer. Generate a personalized learning roadmap as JSON.
+  const known = skills.length > 0 ? skills.join(', ') : 'none';
+  return `Generate a learning roadmap as JSON only. No explanation, no markdown.
+Role: ${goal}, Level: ${level}, Known skills: ${known}
 
-Target Role: ${goal}
-Current Level: ${level}
-Skills already known: ${skills.length > 0 ? skills.join(', ') : 'none specified'}
+Return this exact JSON structure:
+{"title":"...","summary":"...","totalWeeks":12,"totalSkills":10,"difficulty":"${level}","goalIcon":"🎯","phases":[{"phase":1,"title":"...","subtitle":"...","nodes":[{"name":"...","status":"core","description":"One sentence.","durationWeeks":2,"difficultyDots":1,"resources":[{"type":"docs","label":"Official Docs","url":"https://example.com"}]}]}]}
 
-Return ONLY a JSON object (no markdown, no preamble) with this exact structure:
-{
-  "title": "Role - Level Roadmap",
-  "summary": "One sentence describing this path",
-  "totalWeeks": number,
-  "totalSkills": number,
-  "phases": number,
-  "difficulty": "Beginner|Intermediate|Advanced",
-  "goalIcon": "emoji",
-  "phases": [
-    {
-      "phase": 1,
-      "title": "Phase title",
-      "subtitle": "What you'll achieve",
-      "nodes": [
-        {
-          "name": "Skill/Topic name",
-          "status": "core|recommended|optional",
-          "description": "1-2 sentences on why this matters for the role",
-          "durationWeeks": number,
-          "difficultyDots": number (1-3),
-          "resources": [
-            { "type": "youtube|docs|course|project", "label": "Resource name", "url": "https://real-url.com" },
-            { "type": "docs", "label": "Official docs", "url": "https://real-url.com" }
-          ]
-        }
-      ]
-    }
-  ]
-}
-
-Rules:
-- 3-5 phases total, 2-5 nodes per phase
-- Mark skills the user already knows as "core" with lower difficulty
-- Resources must be REAL URLs (MDN, official docs, YouTube channels, freeCodeCamp, roadmap.sh, etc.)
-- Sequence phases from foundational to advanced
-- Focus tightly on the ${goal} role
-- Be concise in descriptions (max 2 sentences)`;
+Rules: 3 phases, 3 nodes each, status is core/recommended/optional, real resource URLs only, keep descriptions short.`;
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
