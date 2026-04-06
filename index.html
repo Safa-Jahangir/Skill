@@ -979,6 +979,56 @@
   }
 
   .retry-btn:hover { background: rgba(248,113,113,0.2); }
+
+  /* ── ROLE SUGGESTION BANNER ── */
+  .role-suggestion {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 13px;
+    border-radius: var(--radius-sm);
+    background: rgba(45,212,191,0.08);
+    border: 1px solid rgba(45,212,191,0.25);
+    animation: fadeIn 0.3s ease;
+  }
+  .role-suggestion.show { display: block; }
+  .suggestion-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .suggestion-label {
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .suggestion-role {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 3px 0;
+  }
+  .suggestion-reason {
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+  .suggestion-apply {
+    margin-top: 8px;
+    width: 100%;
+    padding: 7px;
+    border-radius: 6px;
+    border: 1px solid rgba(45,212,191,0.35);
+    background: rgba(45,212,191,0.1);
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .suggestion-apply:hover { background: rgba(45,212,191,0.2); }
 </style>
 </head>
 <body>
@@ -1053,6 +1103,18 @@
             </button>
             <button class="goal-btn" data-goal="Product Manager" onclick="selectGoal(this)">
               <i class="fas fa-bullseye"></i>Product Mgr
+            </button>
+          </div>
+
+          <!-- Auto role suggestion based on selected skills -->
+          <div class="role-suggestion" id="roleSuggestion">
+            <div class="suggestion-top">
+              <span class="suggestion-label">✨ Suggested for you</span>
+            </div>
+            <div class="suggestion-role" id="suggestionRole"></div>
+            <div class="suggestion-reason" id="suggestionReason"></div>
+            <button class="suggestion-apply" id="suggestionApply" onclick="applySuggestion()">
+              Use this role →
             </button>
           </div>
 
@@ -1317,6 +1379,7 @@ function toggleSkill(id, name) {
   renderSelectedStrip();
   updateBadge();
   updateGenerateBtn();
+  updateRoleSuggestion();
 }
 
 function updateCounts() {
@@ -1605,6 +1668,161 @@ function copyRoadmap() {
     btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
     setTimeout(() => btn.innerHTML = orig, 2000);
   }
+}
+
+
+// ── SKILL → ROLE SUGGESTION ───────────────────────────────────────────────────
+const SKILL_ROLE_MAP = {
+  // Frontend signals
+  'html':           { frontend: 3 },
+  'css':            { frontend: 3 },
+  'javascript':     { frontend: 3, fullstack: 1 },
+  'react':          { frontend: 3, fullstack: 1 },
+  'angular':        { frontend: 3 },
+  'vuejs':          { frontend: 3 },
+  'bootstrap':      { frontend: 2 },
+  'tailwind':       { frontend: 2 },
+  'ui-ux-principles': { frontend: 2, product: 1 },
+
+  // Backend signals
+  'nodejs':         { backend: 3, fullstack: 1 },
+  'python-django-flask': { backend: 3 },
+  'java-backend':   { backend: 3 },
+  'dotnet':         { backend: 3 },
+  'ruby-on-rails':  { backend: 3 },
+  'php':            { backend: 2 },
+  'rest-api-design':{ backend: 3, fullstack: 1 },
+  'microservices':  { backend: 2, devops: 1 },
+
+  // Full stack signals
+  'dsa':            { backend: 2, fullstack: 2 },
+  'system-design':  { backend: 2, fullstack: 2, devops: 1 },
+  'database-design':{ backend: 2, fullstack: 1 },
+
+  // Data / ML signals
+  'python':         { data: 2, ml: 2, backend: 1 },
+  'python-data':    { data: 3, ml: 2 },
+  'tensorflow':     { ml: 3 },
+  'pytorch':        { ml: 3 },
+  'r-language':     { data: 3 },
+  'tableau':        { data: 3 },
+  'power-bi':       { data: 3 },
+  'stats-probability': { data: 3, ml: 2 },
+  'ai-ml-fundamentals': { ml: 3, data: 1 },
+  'math-for-cs':    { ml: 2, data: 2 },
+
+  // DevOps signals
+  'docker':         { devops: 3 },
+  'kubernetes':     { devops: 3 },
+  'jenkins':        { devops: 3 },
+  'aws':            { devops: 2, backend: 1 },
+  'azure':          { devops: 2, backend: 1 },
+  'google-cloud':   { devops: 2, backend: 1 },
+  'linux':          { devops: 2, backend: 1 },
+  'ci-cd':          { devops: 3 },
+  'cloud-computing':{ devops: 2 },
+
+  // Mobile signals
+  'react-native':   { mobile: 3 },
+  'flutter':        { mobile: 3 },
+  'swift':          { mobile: 3 },
+  'kotlin-mobile':  { mobile: 3 },
+
+  // Product signals
+  'product-management': { product: 3 },
+  'project-management': { product: 2 },
+  'agile-scrum':    { product: 2 },
+  'business-analysis': { product: 2 },
+  'communication':  { product: 1 },
+  'leadership':     { product: 2 },
+
+  // DB signals
+  'sql':            { backend: 1, data: 1, fullstack: 1 },
+  'mysql':          { backend: 2, fullstack: 1 },
+  'postgresql':     { backend: 2, fullstack: 1 },
+  'mongodb':        { backend: 2, fullstack: 1 },
+  'firebase':       { mobile: 1, fullstack: 1 },
+
+  // General
+  'git':            { fullstack: 1, backend: 1, frontend: 1 },
+  'cs-fundamentals':{ backend: 1, fullstack: 1 },
+  'oop':            { backend: 2, fullstack: 1 },
+  'java':           { backend: 2 },
+  'csharp':         { backend: 2 },
+  'cpp':            { backend: 1 },
+  'go':             { backend: 2, devops: 1 },
+  'rust':           { backend: 2 },
+};
+
+const ROLE_INFO = {
+  frontend:  { label: 'Frontend Developer',         icon: '🎨', reason: 'You have strong UI/web skills — HTML, CSS, JS frameworks point directly here.' },
+  backend:   { label: 'Backend Developer',           icon: '⚙️', reason: 'Your server-side, API and database skills are a strong backend signal.' },
+  fullstack: { label: 'Full Stack Developer',        icon: '🏗️', reason: 'You have a healthy mix of frontend and backend skills — full stack fits perfectly.' },
+  data:      { label: 'Data Scientist',              icon: '📊', reason: 'Python, statistics and data tools in your skills point strongly to data science.' },
+  ml:        { label: 'ML Engineer',                 icon: '🤖', reason: 'ML frameworks and math skills in your profile suggest a machine learning path.' },
+  devops:    { label: 'DevOps Engineer',             icon: '🔧', reason: 'Cloud, containers and automation tools are classic DevOps skills.' },
+  mobile:    { label: 'Mobile Developer',            icon: '📱', reason: 'Mobile frameworks like Flutter or React Native point to a mobile dev path.' },
+  product:   { label: 'Product Manager',             icon: '🎯', reason: 'Leadership, agile and business skills suggest a product management direction.' },
+};
+
+let suggestedRole = null;
+
+function computeSuggestedRole() {
+  if (selectedSkills.size < 2) return null;
+
+  const scores = { frontend:0, backend:0, fullstack:0, data:0, ml:0, devops:0, mobile:0, product:0 };
+
+  selectedSkills.forEach(id => {
+    const map = SKILL_ROLE_MAP[id];
+    if (map) {
+      Object.entries(map).forEach(([role, val]) => {
+        scores[role] = (scores[role] || 0) + val;
+      });
+    }
+  });
+
+  // Boost fullstack if both frontend + backend are significant
+  if (scores.frontend >= 3 && scores.backend >= 3) {
+    scores.fullstack += 3;
+  }
+
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  if (sorted[0][1] === 0) return null;
+  return sorted[0][0];
+}
+
+function updateRoleSuggestion() {
+  const banner = document.getElementById('roleSuggestion');
+  // Don't override if user already manually picked a role
+  if (selectedGoal) { banner.classList.remove('show'); return; }
+
+  const top = computeSuggestedRole();
+  if (!top) { banner.classList.remove('show'); return; }
+
+  const info = ROLE_INFO[top];
+  suggestedRole = info.label;
+
+  document.getElementById('suggestionRole').textContent = info.icon + ' ' + info.label;
+  document.getElementById('suggestionReason').textContent = info.reason;
+  banner.classList.add('show');
+}
+
+function applySuggestion() {
+  if (!suggestedRole) return;
+  const btn = [...document.querySelectorAll('.goal-btn')].find(b => b.dataset.goal === suggestedRole);
+  if (btn) {
+    selectGoal(btn);
+  } else {
+    // Role not in buttons (e.g. Full Stack), set it directly
+    selectedGoal = suggestedRole;
+    document.getElementById('badge-goal').textContent = suggestedRole;
+    document.getElementById('badge-goal').classList.add('active');
+    document.getElementById('step1').classList.add('done');
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    updateGenerateBtn();
+  }
+  document.getElementById('roleSuggestion').classList.remove('show');
 }
 
 init();
