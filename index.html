@@ -2030,7 +2030,7 @@ function applySuggestion() {
 
 // ── FEEDBACK ─────────────────────────────────────────────────────────────────
 // Replace SHEET_URL below with your Google Apps Script Web App URL (see instructions)
-const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxwdvUmMlNO0R05Zsa3Dl4Jb1l0FHjEnoCauNIjkN1caYcllMVtk99N0B5sOoHgyrCT/exec';
+const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzBMCofUAuH9KApWSMFtjlC27z9yLaK1bAGOqpqPS1lZUDWwqoXnUdYsJt8SdzwKVH0/exec';
 
 let feedbackRating = 0;
 let feedbackTimer = null;
@@ -2073,7 +2073,7 @@ async function submitFeedback() {
     comment: comment,
     role: selectedGoal || 'unknown',
     level: selectedLevel || 'unknown',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toLocaleString()
   };
 
   // Store in localStorage for local analytics
