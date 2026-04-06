@@ -11,20 +11,21 @@ export default async function handler(req, res) {
   try {
     let body = req.body;
     if (typeof body === 'string') {
-      body = JSON.parse(body);
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
     }
-
-    if (!body || !body.messages || !body.model) {
-      return res.status(400).json({ error: 'Missing required fields: model and messages' });
-    }
+    if (!body) body = {};
 
     const payload = {
-      model: body.model,
-      max_tokens: body.max_tokens || 4000,
-      messages: body.messages
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 4000,
+      messages: body.messages || []
     };
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    if (!payload.messages.length) {
+      return res.status(400).json({ error: 'No messages provided' });
+    }
+
+    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,13 +35,10 @@ export default async function handler(req, res) {
       body: JSON.stringify(payload)
     });
 
-    const data = await response.json();
+    const data = await upstream.json();
 
-    if (!response.ok) {
-      return res.status(response.status).json(data);
-    }
-
-    return res.status(200).json(data);
+    // Forward the exact response so frontend can see real errors
+    return res.status(upstream.status).json(data);
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
