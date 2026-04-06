@@ -3,9 +3,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'API key not configured' });
+    return res.status(500).json({ error: 'GROQ_API_KEY not set in environment variables' });
   }
 
   try {
@@ -19,21 +19,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No prompt provided' });
     }
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 25000);
 
-    const upstream = await fetch(geminiUrl, {
+    const upstream = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
       signal: controller.signal,
       body: JSON.stringify({
-        contents: [{ parts: [{ text: userMessage }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2000
-        }
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: userMessage }],
+        max_tokens: 2000,
+        temperature: 0.7
       })
     });
 
@@ -42,10 +42,12 @@ export default async function handler(req, res) {
     const data = await upstream.json();
 
     if (!upstream.ok) {
-      return res.status(upstream.status).json({ error: data?.error?.message || JSON.stringify(data) });
+      const detail = data?.error?.message || JSON.stringify(data);
+      return res.status(upstream.status).json({ error: detail });
     }
 
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    // Convert Groq (OpenAI-compatible) response to Anthropic-compatible format
+    const text = data?.choices?.[0]?.message?.content || '';
 
     return res.status(200).json({
       content: [{ type: 'text', text }]
