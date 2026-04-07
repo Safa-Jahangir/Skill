@@ -2113,7 +2113,7 @@ async function submitFeedback() {
 // Trigger feedback 4 seconds after roadmap renders
 function scheduleFeedback() {
   if (feedbackTimer) clearTimeout(feedbackTimer);
-  feedbackTimer = setTimeout(() => openFeedback(), 4000);
+  feedbackTimer = setTimeout(() => openFeedback(), 7000);
 }
 
 init();
