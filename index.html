@@ -2065,6 +2065,9 @@ async function submitFeedback() {
   const btn = document.getElementById('feedbackSubmit');
   btn.textContent = 'Sending...';
   btn.disabled = true;
+  // Hide close button while submitting
+  const closeBtn = document.querySelector('.feedback-dismiss');
+  if (closeBtn) { closeBtn.style.visibility = 'hidden'; closeBtn.disabled = true; }
 
   // Save locally always
   const entry = {
@@ -2101,6 +2104,9 @@ async function submitFeedback() {
 
   document.getElementById('feedbackForm').style.display = 'none';
   document.getElementById('feedbackThankyou').classList.add('show');
+  // Restore close button
+  const closeBtn2 = document.querySelector('.feedback-dismiss');
+  if (closeBtn2) { closeBtn2.style.visibility = 'visible'; closeBtn2.disabled = false; }
   setTimeout(() => closeFeedback(), 2000);
 }
 
