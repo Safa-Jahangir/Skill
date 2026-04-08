@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>SkillPath | Personalized Learning Roadmaps</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -28,7 +28,11 @@
     --radius-sm: 8px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+  }
 
   body {
     background: var(--bg);
@@ -67,9 +71,11 @@
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
     margin-bottom: 36px;
+    flex-wrap: wrap;
+    gap: 16px;
   }
 
-  .logo-group { display: flex; align-items: center; gap: 14px; }
+  .logo-group { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
   .logo-icon {
     width: 44px; height: 44px;
@@ -98,6 +104,7 @@
   .header-badges {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
   }
 
   .badge {
@@ -122,6 +129,8 @@
     align-items: center;
     gap: 0;
     margin-bottom: 32px;
+    flex-wrap: wrap;
+    overflow-x: auto;
   }
 
   .step {
@@ -132,6 +141,7 @@
     border-radius: 8px;
     transition: all 0.2s;
     cursor: pointer;
+    flex-shrink: 0;
   }
 
   .step.active { background: rgba(124,111,247,0.12); }
@@ -172,6 +182,7 @@
     flex: 0 0 40px;
     height: 1px;
     background: var(--border);
+    flex-shrink: 0;
   }
 
   /* ── MAIN LAYOUT ── */
@@ -180,51 +191,6 @@
     grid-template-columns: 360px 1fr;
     gap: 24px;
     align-items: start;
-  }
-
-  @media (max-width: 900px) {
-    .main-layout { grid-template-columns: 1fr; }
-    .left-panel { position: relative; top: 0; max-height: none; }
-    .summary-strip { grid-template-columns: repeat(2, 1fr); }
-    .nodes-grid { padding-left: 0; grid-template-columns: 1fr; }
-    .phase-header { gap: 8px; }
-    .hero-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .hero-meta { gap: 8px; }
-    .right-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .right-actions { width: 100%; justify-content: flex-end; }
-    .steps-bar { gap: 0; overflow-x: auto; padding-bottom: 4px; }
-    .step { padding: 8px 10px; }
-    .step-label { font-size: 11px; }
-    .step-connector { flex: 0 0 20px; }
-    header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 24px 0 20px; }
-    .header-badges { flex-wrap: wrap; }
-    .goal-grid { grid-template-columns: 1fr 1fr; }
-    .feedback-card { padding: 20px; }
-    .stars-row { gap: 6px; }
-    .star-btn { font-size: 28px; }
-  }
-
-  @media (max-width: 480px) {
-    .app { padding: 0 12px 40px; }
-    h1 { font-size: 20px; }
-    .summary-strip { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .summary-val { font-size: 18px; }
-    .nodes-grid { grid-template-columns: 1fr; padding-left: 0; gap: 8px; }
-    .node-card { padding: 12px; }
-    .node-name { font-size: 13px; }
-    .phase-num { width: 26px; height: 26px; font-size: 11px; }
-    .phase-title-wrap h4 { font-size: 14px; }
-    .hero-bar { padding: 12px; }
-    .hero-icon { width: 38px; height: 38px; font-size: 16px; }
-    .right-body { padding: 14px; }
-    .goal-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-    .goal-btn { font-size: 10px; padding: 8px 4px; }
-    .generate-btn { font-size: 13px; padding: 11px; }
-    .step-label { display: none; }
-    .steps-bar { justify-content: center; }
-    .feedback-overlay { padding: 0 12px 20px; }
-    .meta-tag { font-size: 11px; }
-    .resource-link { font-size: 10px; padding: 3px 7px; }
   }
 
   /* ── LEFT PANEL ── */
@@ -284,7 +250,7 @@
 
   .goal-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 7px;
   }
 
@@ -325,6 +291,7 @@
     display: flex;
     gap: 6px;
     margin-top: 12px;
+    flex-wrap: wrap;
   }
 
   .level-btn {
@@ -560,6 +527,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .right-actions {
@@ -723,6 +692,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
   }
 
   .hero-icon {
@@ -763,6 +733,7 @@
   .phase-block {
     margin-bottom: 28px;
     animation: fadeIn 0.4s ease both;
+    width: 100%;
   }
 
   @keyframes fadeIn {
@@ -775,6 +746,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 14px;
+    flex-wrap: wrap;
   }
 
   .phase-num {
@@ -802,17 +774,41 @@
     margin-top: 1px;
   }
 
-  /* Skill nodes - FIXED GRID TO PREVENT OVERLAPPING */
+  /* FIXED: Skill nodes grid - responsive without overlap */
   .nodes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 16px;
-    padding-left: 44px;
     width: 100%;
     box-sizing: border-box;
   }
 
-  /* Ensure each node card has proper sizing */
+  /* Remove left padding on mobile to save space */
+  @media (max-width: 768px) {
+    .nodes-grid {
+      padding-left: 0;
+      gap: 12px;
+      grid-template-columns: 1fr; /* SINGLE COLUMN ON MOBILE - NO OVERLAP */
+    }
+  }
+
+  /* Tablet: 2 columns */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .nodes-grid {
+      grid-template-columns: repeat(2, 1fr);
+      padding-left: 20px;
+    }
+  }
+
+  /* Desktop: auto-fill columns */
+  @media (min-width: 1025px) {
+    .nodes-grid {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      padding-left: 44px;
+    }
+  }
+
+  /* Ensure each node card has proper sizing and doesn't overflow */
   .node-card {
     background: var(--bg3);
     border: 1px solid var(--border);
@@ -821,9 +817,10 @@
     transition: all 0.2s;
     cursor: default;
     width: 100%;
+    min-width: 0;
     box-sizing: border-box;
-    break-inside: avoid;
-    page-break-inside: avoid;
+    overflow: hidden;
+    word-wrap: break-word;
   }
 
   .node-card:hover {
@@ -843,6 +840,7 @@
     justify-content: space-between;
     gap: 8px;
     margin-bottom: 8px;
+    flex-wrap: wrap;
   }
 
   .node-name {
@@ -850,6 +848,7 @@
     font-weight: 600;
     color: var(--text);
     line-height: 1.3;
+    word-break: break-word;
   }
 
   .node-status {
@@ -884,6 +883,7 @@
     color: var(--text2);
     line-height: 1.5;
     margin-bottom: 10px;
+    word-break: break-word;
   }
 
   .node-resources {
@@ -904,6 +904,7 @@
     text-decoration: none;
     transition: all 0.15s;
     border: 1px solid;
+    word-break: break-word;
   }
 
   .resource-link.youtube {
@@ -942,6 +943,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .duration-badge {
@@ -976,7 +979,7 @@
   /* ── SUMMARY STRIP ── */
   .summary-strip {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 12px;
     margin-bottom: 28px;
   }
@@ -1100,6 +1103,7 @@
     width: 100%;
     max-width: 420px;
     animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+    margin: 0 16px;
   }
 
   @keyframes slideUp {
@@ -1143,6 +1147,7 @@
     gap: 8px;
     justify-content: center;
     margin-bottom: 16px;
+    flex-wrap: wrap;
   }
 
   .star-btn {
@@ -1200,6 +1205,157 @@
   .feedback-thankyou.show { display: block; }
   .feedback-thankyou .ty-emoji { font-size: 36px; margin-bottom: 8px; }
   .feedback-thankyou p { font-size: 14px; color: var(--text2); }
+
+  /* ============================================ */
+  /* RESPONSIVE BREAKPOINTS - MAIN FIX FOR MOBILE */
+  /* ============================================ */
+  
+  @media (max-width: 768px) {
+    .app {
+      padding: 0 12px 40px;
+    }
+    
+    .main-layout {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .left-panel {
+      position: relative;
+      top: 0;
+      max-height: none;
+    }
+    
+    .right-body {
+      padding: 16px;
+    }
+    
+    .hero-bar {
+      padding: 12px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .hero-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+    
+    .hero-meta {
+      gap: 8px;
+    }
+    
+    .phase-header {
+      gap: 8px;
+    }
+    
+    .phase-num {
+      width: 28px;
+      height: 28px;
+      font-size: 11px;
+    }
+    
+    .phase-title-wrap h4 {
+      font-size: 14px;
+    }
+    
+    .phase-subtitle {
+      font-size: 11px;
+    }
+    
+    .summary-strip {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    .summary-val {
+      font-size: 18px;
+    }
+    
+    .goal-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .step-label {
+      display: none;
+    }
+    
+    .steps-bar {
+      justify-content: center;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    
+    .step {
+      padding: 6px 10px;
+    }
+    
+    .step-connector {
+      flex: 0 0 20px;
+    }
+    
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px 0 20px;
+    }
+    
+    .right-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .right-actions {
+      width: 100%;
+      justify-content: flex-end;
+    }
+    
+    .node-card {
+      padding: 12px;
+    }
+    
+    .node-name {
+      font-size: 13px;
+    }
+    
+    .resource-link {
+      font-size: 10px;
+      padding: 3px 7px;
+    }
+    
+    .phase-connector {
+      margin-left: 10px;
+    }
+    
+    .feedback-card {
+      padding: 20px;
+      margin: 0 12px;
+    }
+    
+    .star-btn {
+      font-size: 28px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .main-layout {
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+    }
+    
+    .goal-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1689,10 +1845,15 @@ function quickStart(goal) {
 
 // ── GENERATE ─────────────────────────────────────────────────────────────────
 async function generateRoadmap() {
-  document.getElementById('placeholder').style.display = 'none';
-  document.getElementById('roadmapOutput').classList.remove('active');
-  document.getElementById('errorState').classList.remove('active');
-  document.getElementById('loadingState').classList.add('active');
+  const placeholder = document.getElementById('placeholder');
+  const roadmapOutput = document.getElementById('roadmapOutput');
+  const errorState = document.getElementById('errorState');
+  const loadingState = document.getElementById('loadingState');
+  
+  if (placeholder) placeholder.style.display = 'none';
+  if (roadmapOutput) roadmapOutput.classList.remove('active');
+  if (errorState) errorState.classList.remove('active');
+  if (loadingState) loadingState.classList.add('active');
 
   const loadingMsgs = [
     ['Analyzing your skill profile...', 'Mapping current knowledge gaps'],
@@ -1703,8 +1864,10 @@ async function generateRoadmap() {
   let msgIdx = 0;
   const msgInterval = setInterval(() => {
     if (msgIdx < loadingMsgs.length) {
-      document.getElementById('loadingText').textContent = loadingMsgs[msgIdx][0];
-      document.getElementById('loadingSubtext').textContent = loadingMsgs[msgIdx][1];
+      const loadingText = document.getElementById('loadingText');
+      const loadingSubtext = document.getElementById('loadingSubtext');
+      if (loadingText) loadingText.textContent = loadingMsgs[msgIdx][0];
+      if (loadingSubtext) loadingSubtext.textContent = loadingMsgs[msgIdx][1];
       msgIdx++;
     }
   }, 1200);
@@ -1715,7 +1878,6 @@ async function generateRoadmap() {
   const prompt = buildPrompt(selectedGoal, selectedLevel, selectedNames);
 
   try {
-    // API key lives securely in Vercel env vars — we call our own proxy endpoint
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1731,7 +1893,6 @@ async function generateRoadmap() {
     const data = await response.json();
 
     if (!response.ok) {
-      // Show the real Anthropic error message for easier debugging
       const detail = data?.error?.message || data?.error || JSON.stringify(data);
       throw new Error(`API ${response.status}: ${detail}`);
     }
@@ -1750,15 +1911,17 @@ async function generateRoadmap() {
       throw new Error('Could not parse roadmap. Raw: ' + text.slice(0, 200));
     }
 
-    document.getElementById('loadingState').classList.remove('active');
+    if (loadingState) loadingState.classList.remove('active');
     renderRoadmap(roadmap);
 
   } catch(err) {
     clearInterval(msgInterval);
-    document.getElementById('loadingState').classList.remove('active');
-    document.getElementById('errorState').classList.add('active');
-    document.getElementById('errorMsg').textContent = 'Could not generate roadmap.';
-    document.getElementById('errorDetail').textContent = err.message;
+    if (loadingState) loadingState.classList.remove('active');
+    if (errorState) errorState.classList.add('active');
+    const errorMsg = document.getElementById('errorMsg');
+    const errorDetail = document.getElementById('errorDetail');
+    if (errorMsg) errorMsg.textContent = 'Could not generate roadmap.';
+    if (errorDetail) errorDetail.textContent = err.message;
   }
 }
 
@@ -1773,27 +1936,27 @@ Return this exact JSON structure:
 Rules: 3 phases, 3 nodes each, status is core/recommended/optional, real resource URLs only, keep descriptions short.`;
 }
 
-// ── RENDER ROADMAP (FIXED - NO OVERLAPPING) ──
+// ── RENDER ROADMAP (FIXED FOR MOBILE - NO OVERLAP) ──
 function renderRoadmap(data) {
   const out = document.getElementById('roadmapOutput');
+  if (!out) return;
   
-  // CRITICAL FIX: Clear all content and reset styles to prevent grid overlap
+  // Clear all content
   out.innerHTML = '';
   out.style.display = 'block';
-  out.style.overflow = 'visible';
   
   // Hero section
   const hero = document.createElement('div');
   hero.className = 'hero-bar';
   hero.innerHTML = `
-    <div class="hero-icon">${data.goalIcon || '🎯'}</div>
+    <div class="hero-icon">${escapeHtml(data.goalIcon) || '🎯'}</div>
     <div class="hero-info">
       <h3>${escapeHtml(data.title) || 'Learning Roadmap'}</h3>
       <p style="font-size:13px;color:var(--text2);margin-top:3px;">${escapeHtml(data.summary) || ''}</p>
       <div class="hero-meta">
         <span class="meta-tag"><i class="fas fa-clock"></i> ~${data.totalWeeks || '?'} weeks</span>
         <span class="meta-tag"><i class="fas fa-layer-group"></i> ${Array.isArray(data.phases) ? data.phases.length : 0} phases</span>
-        <span class="meta-tag"><i class="fas fa-graduation-cap"></i> ${data.difficulty || selectedLevel}</span>
+        <span class="meta-tag"><i class="fas fa-graduation-cap"></i> ${escapeHtml(data.difficulty) || selectedLevel}</span>
         <span class="meta-tag"><i class="fas fa-code-branch"></i> ${data.totalSkills || '?'} skills</span>
       </div>
     </div>
@@ -1816,7 +1979,7 @@ function renderRoadmap(data) {
   `;
   out.appendChild(summary);
 
-  // Phases - each with its own grid container
+  // Phases
   phases.forEach((phase, pi) => {
     if (pi > 0) {
       const connector = document.createElement('div');
@@ -1827,28 +1990,22 @@ function renderRoadmap(data) {
     const block = document.createElement('div');
     block.className = 'phase-block';
     block.style.animationDelay = (pi * 0.1) + 's';
-    block.style.marginBottom = '28px';
     
     // Phase header
-    const headerHtml = `
-      <div class="phase-header">
-        <div class="phase-num">${phase.phase || pi + 1}</div>
-        <div class="phase-title-wrap">
-          <h4>${escapeHtml(phase.title) || `Phase ${pi + 1}`}</h4>
-          <div class="phase-subtitle">${escapeHtml(phase.subtitle) || ''}</div>
-        </div>
+    const headerDiv = document.createElement('div');
+    headerDiv.className = 'phase-header';
+    headerDiv.innerHTML = `
+      <div class="phase-num">${phase.phase || pi + 1}</div>
+      <div class="phase-title-wrap">
+        <h4>${escapeHtml(phase.title) || `Phase ${pi + 1}`}</h4>
+        <div class="phase-subtitle">${escapeHtml(phase.subtitle) || ''}</div>
       </div>
     `;
+    block.appendChild(headerDiv);
     
-    // Create nodes grid container - FRESH container each time
+    // Create nodes grid - responsive by CSS
     const nodesGrid = document.createElement('div');
     nodesGrid.className = 'nodes-grid';
-    nodesGrid.style.display = 'grid';
-    nodesGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
-    nodesGrid.style.gap = '16px';
-    nodesGrid.style.paddingLeft = '44px';
-    nodesGrid.style.width = '100%';
-    nodesGrid.style.boxSizing = 'border-box';
     
     // Add nodes
     const nodes = phase.nodes || [];
@@ -1858,21 +2015,19 @@ function renderRoadmap(data) {
       ).join('');
 
       const resourcesHTML = (node.resources || []).map(r => {
-        const icon = { youtube: 'fab fa-youtube', docs: 'fas fa-book', course: 'fas fa-graduation-cap', project: 'fas fa-hammer' }[r.type] || 'fas fa-link';
-        return `<a class="resource-link ${r.type}" href="${escapeHtml(r.url)}" target="_blank" rel="noopener">
+        const iconMap = { youtube: 'fab fa-youtube', docs: 'fas fa-book', course: 'fas fa-graduation-cap', project: 'fas fa-hammer' };
+        const icon = iconMap[r.type] || 'fas fa-link';
+        return `<a class="resource-link ${escapeHtml(r.type)}" href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer">
           <i class="${icon}"></i>${escapeHtml(r.label)}
         </a>`;
       }).join('');
 
       const nodeCard = document.createElement('div');
       nodeCard.className = `node-card ${node.status === 'core' ? 'highlight' : ''}`;
-      nodeCard.style.width = '100%';
-      nodeCard.style.boxSizing = 'border-box';
-      nodeCard.style.breakInside = 'avoid';
       nodeCard.innerHTML = `
         <div class="node-top">
           <div class="node-name">${escapeHtml(node.name) || 'Skill'}</div>
-          <div class="node-status ${node.status || 'optional'}">${node.status || 'optional'}</div>
+          <div class="node-status ${escapeHtml(node.status) || 'optional'}">${escapeHtml(node.status) || 'optional'}</div>
         </div>
         <div class="node-desc">${escapeHtml(node.description) || 'Learn this essential skill.'}</div>
         ${resourcesHTML ? `<div class="node-resources">${resourcesHTML}</div>` : ''}
@@ -1884,7 +2039,6 @@ function renderRoadmap(data) {
       nodesGrid.appendChild(nodeCard);
     });
     
-    block.innerHTML = headerHtml;
     block.appendChild(nodesGrid);
     out.appendChild(block);
   });
@@ -1892,15 +2046,18 @@ function renderRoadmap(data) {
   out.classList.add('active');
 
   // Mark step 3 done
-  document.getElementById('step3').classList.add('done');
-  document.getElementById('step3').classList.remove('active');
+  const step3 = document.getElementById('step3');
+  if (step3) {
+    step3.classList.add('done');
+    step3.classList.remove('active');
+  }
   scheduleFeedback();
 }
 
-// Helper function to escape HTML and prevent XSS
+// Helper function to escape HTML
 function escapeHtml(str) {
   if (!str) return '';
-  return str
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -1926,127 +2083,84 @@ function copyRoadmap() {
 
 // ── SKILL → ROLE SUGGESTION ───────────────────────────────────────────────────
 const SKILL_ROLE_MAP = {
-  // Frontend signals
-  'html':           { frontend: 3 },
-  'css':            { frontend: 3 },
-  'javascript':     { frontend: 3, fullstack: 1 },
-  'react':          { frontend: 3, fullstack: 1 },
-  'angular':        { frontend: 3 },
-  'vuejs':          { frontend: 3 },
-  'bootstrap':      { frontend: 2 },
-  'tailwind':       { frontend: 2 },
+  'html': { frontend: 3 },
+  'css': { frontend: 3 },
+  'javascript': { frontend: 3, fullstack: 1 },
+  'react': { frontend: 3, fullstack: 1 },
+  'angular': { frontend: 3 },
+  'vuejs': { frontend: 3 },
+  'bootstrap': { frontend: 2 },
+  'tailwind': { frontend: 2 },
   'ui-ux-principles': { frontend: 2, product: 1 },
-
-  // Backend signals
-  'nodejs':         { backend: 3, fullstack: 1 },
+  'nodejs': { backend: 3, fullstack: 1 },
   'python-django-flask': { backend: 3 },
-  'java-backend':   { backend: 3 },
-  'dotnet':         { backend: 3 },
-  'ruby-on-rails':  { backend: 3 },
-  'php':            { backend: 2 },
-  'rest-api-design':{ backend: 3, fullstack: 1 },
-  'microservices':  { backend: 2, devops: 1 },
-
-  // Full stack signals
-  'dsa':            { backend: 2, fullstack: 2 },
-  'system-design':  { backend: 2, fullstack: 2, devops: 1 },
-  'database-design':{ backend: 2, fullstack: 1 },
-
-  // Data / ML signals
-  'python':         { data: 2, ml: 2, backend: 1 },
-  'python-data':    { data: 3, ml: 2 },
-  'tensorflow':     { ml: 3 },
-  'pytorch':        { ml: 3 },
-  'r-language':     { data: 3 },
-  'tableau':        { data: 3 },
-  'power-bi':       { data: 3 },
+  'java-backend': { backend: 3 },
+  'dotnet': { backend: 3 },
+  'ruby-on-rails': { backend: 3 },
+  'php': { backend: 2 },
+  'rest-api-design': { backend: 3, fullstack: 1 },
+  'microservices': { backend: 2, devops: 1 },
+  'dsa': { backend: 2, fullstack: 2 },
+  'system-design': { backend: 2, fullstack: 2, devops: 1 },
+  'database-design': { backend: 2, fullstack: 1 },
+  'python': { data: 2, ml: 2, backend: 1 },
+  'python-data': { data: 3, ml: 2 },
+  'tensorflow': { ml: 3 },
+  'pytorch': { ml: 3 },
+  'tableau': { data: 3 },
+  'power-bi': { data: 3 },
   'stats-probability': { data: 3, ml: 2 },
   'ai-ml-fundamentals': { ml: 3, data: 1 },
-  'math-for-cs':    { ml: 2, data: 2 },
-
-  // DevOps signals
-  'docker':         { devops: 3 },
-  'kubernetes':     { devops: 3 },
-  'jenkins':        { devops: 3 },
-  'aws':            { devops: 2, backend: 1 },
-  'azure':          { devops: 2, backend: 1 },
-  'google-cloud':   { devops: 2, backend: 1 },
-  'linux':          { devops: 2, backend: 1 },
-  'ci-cd':          { devops: 3 },
-  'cloud-computing':{ devops: 2 },
-
-  // Mobile signals
-  'react-native':   { mobile: 3 },
-  'flutter':        { mobile: 3 },
-  'swift':          { mobile: 3 },
-  'kotlin-mobile':  { mobile: 3 },
-
-  // Product signals
+  'math-for-cs': { ml: 2, data: 2 },
+  'docker': { devops: 3 },
+  'kubernetes': { devops: 3 },
+  'aws': { devops: 2, backend: 1 },
+  'azure': { devops: 2, backend: 1 },
+  'google-cloud': { devops: 2, backend: 1 },
+  'linux': { devops: 2, backend: 1 },
+  'ci-cd': { devops: 3 },
+  'cloud-computing': { devops: 2 },
+  'react-native': { mobile: 3 },
+  'flutter': { mobile: 3 },
+  'swift': { mobile: 3 },
+  'kotlin-mobile': { mobile: 3 },
   'product-management': { product: 3 },
   'project-management': { product: 2 },
-  'agile-scrum':    { product: 2 },
+  'agile-scrum': { product: 2 },
   'business-analysis': { product: 2 },
-  'communication':  { product: 1 },
-  'leadership':     { product: 2 },
-
-  // Cybersecurity signals
-  'cybersecurity':       { cyber: 3, backend: 1 },
-  'computer-networks':   { cyber: 2, cloud: 1, devops: 1 },
-  'operating-systems':   { cyber: 2, devops: 1 },
-
-  // Cloud signals
-  'cloud-computing':     { cloud: 3, devops: 2 },
-  'aws':                 { cloud: 3, devops: 2, backend: 1 },
-  'azure':               { cloud: 3, devops: 2, backend: 1 },
-  'google-cloud':        { cloud: 3, devops: 2, backend: 1 },
-  'kubernetes':          { cloud: 2, devops: 3 },
-  'docker':              { cloud: 1, devops: 3 },
-
-  // Data Engineering signals
-  'data-management':     { dataeng: 3, data: 2 },
-  'database-design':     { dataeng: 3, backend: 2 },
-  'postgresql':          { dataeng: 2, backend: 2, fullstack: 1 },
-  'mysql':               { dataeng: 2, backend: 2, fullstack: 1 },
-  'sql':                 { dataeng: 2, data: 2, backend: 1 },
-  'mongodb':             { dataeng: 2, backend: 2 },
-
-  // AI Engineer signals
-  'ai-ml-fundamentals':  { ai: 3, ml: 2, data: 1 },
-  'tensorflow':          { ai: 2, ml: 3 },
-  'pytorch':             { ai: 2, ml: 3 },
-  'python-data':         { ai: 1, ml: 2, data: 3 },
-
-  // DB signals
-  'sql':            { backend: 1, data: 1, fullstack: 1 },
-  'mysql':          { backend: 2, fullstack: 1 },
-  'postgresql':     { backend: 2, fullstack: 1 },
-  'mongodb':        { backend: 2, fullstack: 1 },
-  'firebase':       { mobile: 1, fullstack: 1 },
-
-  // General
-  'git':            { fullstack: 1, backend: 1, frontend: 1 },
-  'cs-fundamentals':{ backend: 1, fullstack: 1 },
-  'oop':            { backend: 2, fullstack: 1 },
-  'java':           { backend: 2 },
-  'csharp':         { backend: 2 },
-  'cpp':            { backend: 1 },
-  'go':             { backend: 2, devops: 1 },
-  'rust':           { backend: 2 },
+  'communication': { product: 1 },
+  'leadership': { product: 2 },
+  'cybersecurity': { cyber: 3, backend: 1 },
+  'computer-networks': { cyber: 2, cloud: 1, devops: 1 },
+  'operating-systems': { cyber: 2, devops: 1 },
+  'data-management': { dataeng: 3, data: 2 },
+  'postgresql': { dataeng: 2, backend: 2, fullstack: 1 },
+  'mysql': { dataeng: 2, backend: 2, fullstack: 1 },
+  'sql': { dataeng: 2, data: 2, backend: 1 },
+  'mongodb': { dataeng: 2, backend: 2 },
+  'git': { fullstack: 1, backend: 1, frontend: 1 },
+  'cs-fundamentals': { backend: 1, fullstack: 1 },
+  'oop': { backend: 2, fullstack: 1 },
+  'java': { backend: 2 },
+  'csharp': { backend: 2 },
+  'cpp': { backend: 1 },
+  'go': { backend: 2, devops: 1 },
+  'rust': { backend: 2 },
 };
 
 const ROLE_INFO = {
-  frontend:  { label: 'Frontend Developer',         icon: '🎨', reason: 'You have strong UI/web skills — HTML, CSS, JS frameworks point directly here.' },
-  backend:   { label: 'Backend Developer',           icon: '⚙️', reason: 'Your server-side, API and database skills are a strong backend signal.' },
-  fullstack: { label: 'Full Stack Developer',        icon: '🏗️', reason: 'You have a healthy mix of frontend and backend skills — full stack fits perfectly.' },
-  data:      { label: 'Data Scientist',              icon: '📊', reason: 'Python, statistics and data tools in your skills point strongly to data science.' },
-  ml:        { label: 'ML Engineer',                 icon: '🤖', reason: 'ML frameworks and math skills in your profile suggest a machine learning path.' },
-  devops:    { label: 'DevOps Engineer',             icon: '🔧', reason: 'Cloud, containers and automation tools are classic DevOps skills.' },
-  mobile:    { label: 'Mobile Developer',            icon: '📱', reason: 'Mobile frameworks like Flutter or React Native point to a mobile dev path.' },
-  product:   { label: 'Product Manager',             icon: '🎯', reason: 'Leadership, agile and business skills suggest a product management direction.' },
-  cyber:     { label: 'Cybersecurity Engineer',      icon: '🔐', reason: 'Networking, OS, Linux and security tools in your skills point strongly to cybersecurity.' },
-  cloud:     { label: 'Cloud Architect',             icon: '☁️',  reason: 'Cloud platforms, containers and infrastructure skills align with cloud architecture.' },
-  dataeng:   { label: 'Data Engineer',               icon: '🗄️',  reason: 'SQL, pipeline and data management skills point to a data engineering path.' },
-  ai:        { label: 'AI Engineer',                 icon: '🤖', reason: 'AI fundamentals, ML frameworks and Python point to an AI engineering role.' },
+  frontend: { label: 'Frontend Developer', icon: '🎨', reason: 'You have strong UI/web skills — HTML, CSS, JS frameworks point directly here.' },
+  backend: { label: 'Backend Developer', icon: '⚙️', reason: 'Your server-side, API and database skills are a strong backend signal.' },
+  fullstack: { label: 'Full Stack Developer', icon: '🏗️', reason: 'You have a healthy mix of frontend and backend skills — full stack fits perfectly.' },
+  data: { label: 'Data Scientist', icon: '📊', reason: 'Python, statistics and data tools in your skills point strongly to data science.' },
+  ml: { label: 'ML Engineer', icon: '🤖', reason: 'ML frameworks and math skills in your profile suggest a machine learning path.' },
+  devops: { label: 'DevOps Engineer', icon: '🔧', reason: 'Cloud, containers and automation tools are classic DevOps skills.' },
+  mobile: { label: 'Mobile Developer', icon: '📱', reason: 'Mobile frameworks like Flutter or React Native point to a mobile dev path.' },
+  product: { label: 'Product Manager', icon: '🎯', reason: 'Leadership, agile and business skills suggest a product management direction.' },
+  cyber: { label: 'Cybersecurity Engineer', icon: '🔐', reason: 'Networking, OS, Linux and security tools in your skills point strongly to cybersecurity.' },
+  cloud: { label: 'Cloud Architect', icon: '☁️', reason: 'Cloud platforms, containers and infrastructure skills align with cloud architecture.' },
+  dataeng: { label: 'Data Engineer', icon: '🗄️', reason: 'SQL, pipeline and data management skills point to a data engineering path.' },
+  ai: { label: 'AI Engineer', icon: '🤖', reason: 'AI fundamentals, ML frameworks and Python point to an AI engineering role.' },
 };
 
 let suggestedRole = null;
@@ -2065,7 +2179,6 @@ function computeSuggestedRole() {
     }
   });
 
-  // Boost fullstack if both frontend + backend are significant
   if (scores.frontend >= 3 && scores.backend >= 3) {
     scores.fullstack += 3;
   }
@@ -2077,18 +2190,25 @@ function computeSuggestedRole() {
 
 function updateRoleSuggestion() {
   const banner = document.getElementById('roleSuggestion');
-  // Don't override if user already manually picked a role
-  if (selectedGoal) { banner.classList.remove('show'); return; }
+  if (selectedGoal) { 
+    if (banner) banner.classList.remove('show'); 
+    return; 
+  }
 
   const top = computeSuggestedRole();
-  if (!top) { banner.classList.remove('show'); return; }
+  if (!top) { 
+    if (banner) banner.classList.remove('show'); 
+    return; 
+  }
 
   const info = ROLE_INFO[top];
   suggestedRole = info.label;
 
-  document.getElementById('suggestionRole').textContent = info.icon + ' ' + info.label;
-  document.getElementById('suggestionReason').textContent = info.reason;
-  banner.classList.add('show');
+  const suggestionRole = document.getElementById('suggestionRole');
+  const suggestionReason = document.getElementById('suggestionReason');
+  if (suggestionRole) suggestionRole.textContent = info.icon + ' ' + info.label;
+  if (suggestionReason) suggestionReason.textContent = info.reason;
+  if (banner) banner.classList.add('show');
 }
 
 function applySuggestion() {
@@ -2097,16 +2217,19 @@ function applySuggestion() {
   if (btn) {
     selectGoal(btn);
   } else {
-    // Role not in buttons (e.g. Full Stack), set it directly
     selectedGoal = suggestedRole;
-    document.getElementById('badge-goal').textContent = suggestedRole;
-    document.getElementById('badge-goal').classList.add('active');
-    document.getElementById('step1').classList.add('done');
-    document.getElementById('step1').classList.remove('active');
-    document.getElementById('step2').classList.add('active');
+    const badgeGoal = document.getElementById('badge-goal');
+    if (badgeGoal) badgeGoal.textContent = suggestedRole;
+    if (badgeGoal) badgeGoal.classList.add('active');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    if (step1) step1.classList.add('done');
+    if (step1) step1.classList.remove('active');
+    if (step2) step2.classList.add('active');
     updateGenerateBtn();
   }
-  document.getElementById('roleSuggestion').classList.remove('show');
+  const roleSuggestion = document.getElementById('roleSuggestion');
+  if (roleSuggestion) roleSuggestion.classList.remove('show');
 }
 
 
@@ -2118,18 +2241,28 @@ let feedbackTimer = null;
 
 function openFeedback() {
   feedbackRating = 0;
-  document.getElementById('feedbackForm').style.display = '';
-  document.getElementById('feedbackThankyou').classList.remove('show');
-  document.getElementById('feedbackComment').classList.remove('show');
-  document.getElementById('feedbackSubmit').classList.remove('show');
-  document.getElementById('feedbackComment').value = '';
-  // Reset stars
+  const feedbackForm = document.getElementById('feedbackForm');
+  const feedbackThankyou = document.getElementById('feedbackThankyou');
+  const feedbackComment = document.getElementById('feedbackComment');
+  const feedbackSubmit = document.getElementById('feedbackSubmit');
+  
+  if (feedbackForm) feedbackForm.style.display = '';
+  if (feedbackThankyou) feedbackThankyou.classList.remove('show');
+  if (feedbackComment) feedbackComment.classList.remove('show');
+  if (feedbackSubmit) feedbackSubmit.classList.remove('show');
+  
+  const commentField = document.getElementById('feedbackComment');
+  if (commentField) commentField.value = '';
+  
   document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('lit'));
-  document.getElementById('feedbackOverlay').classList.add('open');
+  
+  const overlay = document.getElementById('feedbackOverlay');
+  if (overlay) overlay.classList.add('open');
 }
 
 function closeFeedback() {
-  document.getElementById('feedbackOverlay').classList.remove('open');
+  const overlay = document.getElementById('feedbackOverlay');
+  if (overlay) overlay.classList.remove('open');
   if (feedbackTimer) clearTimeout(feedbackTimer);
 }
 
@@ -2138,15 +2271,19 @@ function selectStar(val) {
   document.querySelectorAll('.star-btn').forEach(b => {
     b.classList.toggle('lit', parseInt(b.dataset.val) <= val);
   });
-  document.getElementById('feedbackComment').classList.add('show');
-  document.getElementById('feedbackSubmit').classList.add('show');
+  const commentField = document.getElementById('feedbackComment');
+  const submitBtn = document.getElementById('feedbackSubmit');
+  if (commentField) commentField.classList.add('show');
+  if (submitBtn) submitBtn.classList.add('show');
 }
 
 async function submitFeedback() {
-  const comment = document.getElementById('feedbackComment').value.trim();
+  const comment = document.getElementById('feedbackComment')?.value.trim() || '';
   const btn = document.getElementById('feedbackSubmit');
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
+  if (btn) {
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+  }
   const closeBtn = document.querySelector('.feedback-dismiss');
   if (closeBtn) { closeBtn.style.visibility = 'hidden'; closeBtn.disabled = true; }
 
@@ -2180,8 +2317,11 @@ async function submitFeedback() {
     } catch(e) {}
   }
 
-  document.getElementById('feedbackForm').style.display = 'none';
-  document.getElementById('feedbackThankyou').classList.add('show');
+  const feedbackForm = document.getElementById('feedbackForm');
+  const feedbackThankyou = document.getElementById('feedbackThankyou');
+  if (feedbackForm) feedbackForm.style.display = 'none';
+  if (feedbackThankyou) feedbackThankyou.classList.add('show');
+  
   const closeBtn2 = document.querySelector('.feedback-dismiss');
   if (closeBtn2) { closeBtn2.style.visibility = 'visible'; closeBtn2.disabled = false; }
   setTimeout(() => closeFeedback(), 2000);
@@ -2192,6 +2332,7 @@ function scheduleFeedback() {
   feedbackTimer = setTimeout(() => openFeedback(), 4000);
 }
 
+// Initialize the app
 init();
 </script>
 </body>
