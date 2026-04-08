@@ -802,14 +802,17 @@
     margin-top: 1px;
   }
 
-  /* Skill nodes */
+  /* Skill nodes - FIXED GRID TO PREVENT OVERLAPPING */
   .nodes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
     padding-left: 44px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
+  /* Ensure each node card has proper sizing */
   .node-card {
     background: var(--bg3);
     border: 1px solid var(--border);
@@ -817,12 +820,16 @@
     padding: 14px;
     transition: all 0.2s;
     cursor: default;
+    width: 100%;
+    box-sizing: border-box;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .node-card:hover {
     border-color: var(--border2);
     background: var(--bg4);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .node-card.highlight {
@@ -1766,19 +1773,23 @@ Return this exact JSON structure:
 Rules: 3 phases, 3 nodes each, status is core/recommended/optional, real resource URLs only, keep descriptions short.`;
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
+// ── RENDER ROADMAP (FIXED - NO OVERLAPPING) ──
 function renderRoadmap(data) {
   const out = document.getElementById('roadmapOutput');
+  
+  // CRITICAL FIX: Clear all content and reset styles to prevent grid overlap
   out.innerHTML = '';
-
-  // Hero
+  out.style.display = 'block';
+  out.style.overflow = 'visible';
+  
+  // Hero section
   const hero = document.createElement('div');
   hero.className = 'hero-bar';
   hero.innerHTML = `
     <div class="hero-icon">${data.goalIcon || '🎯'}</div>
     <div class="hero-info">
-      <h3>${data.title}</h3>
-      <p style="font-size:13px;color:var(--text2);margin-top:3px;">${data.summary}</p>
+      <h3>${escapeHtml(data.title) || 'Learning Roadmap'}</h3>
+      <p style="font-size:13px;color:var(--text2);margin-top:3px;">${escapeHtml(data.summary) || ''}</p>
       <div class="hero-meta">
         <span class="meta-tag"><i class="fas fa-clock"></i> ~${data.totalWeeks || '?'} weeks</span>
         <span class="meta-tag"><i class="fas fa-layer-group"></i> ${Array.isArray(data.phases) ? data.phases.length : 0} phases</span>
@@ -1805,7 +1816,7 @@ function renderRoadmap(data) {
   `;
   out.appendChild(summary);
 
-  // Phases
+  // Phases - each with its own grid container
   phases.forEach((phase, pi) => {
     if (pi > 0) {
       const connector = document.createElement('div');
@@ -1816,45 +1827,65 @@ function renderRoadmap(data) {
     const block = document.createElement('div');
     block.className = 'phase-block';
     block.style.animationDelay = (pi * 0.1) + 's';
-
-    const nodesHTML = (phase.nodes || []).map(node => {
+    block.style.marginBottom = '28px';
+    
+    // Phase header
+    const headerHtml = `
+      <div class="phase-header">
+        <div class="phase-num">${phase.phase || pi + 1}</div>
+        <div class="phase-title-wrap">
+          <h4>${escapeHtml(phase.title) || `Phase ${pi + 1}`}</h4>
+          <div class="phase-subtitle">${escapeHtml(phase.subtitle) || ''}</div>
+        </div>
+      </div>
+    `;
+    
+    // Create nodes grid container - FRESH container each time
+    const nodesGrid = document.createElement('div');
+    nodesGrid.className = 'nodes-grid';
+    nodesGrid.style.display = 'grid';
+    nodesGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+    nodesGrid.style.gap = '16px';
+    nodesGrid.style.paddingLeft = '44px';
+    nodesGrid.style.width = '100%';
+    nodesGrid.style.boxSizing = 'border-box';
+    
+    // Add nodes
+    const nodes = phase.nodes || [];
+    nodes.forEach(node => {
       const dots = Array.from({length: 3}, (_, i) =>
         `<div class="diff-dot ${i < (node.difficultyDots || 1) ? 'filled' : ''}"></div>`
       ).join('');
 
       const resourcesHTML = (node.resources || []).map(r => {
         const icon = { youtube: 'fab fa-youtube', docs: 'fas fa-book', course: 'fas fa-graduation-cap', project: 'fas fa-hammer' }[r.type] || 'fas fa-link';
-        return `<a class="resource-link ${r.type}" href="${r.url}" target="_blank" rel="noopener">
-          <i class="${icon}"></i>${r.label}
+        return `<a class="resource-link ${r.type}" href="${escapeHtml(r.url)}" target="_blank" rel="noopener">
+          <i class="${icon}"></i>${escapeHtml(r.label)}
         </a>`;
       }).join('');
 
-      return `
-        <div class="node-card ${node.status === 'core' ? 'highlight' : ''}">
-          <div class="node-top">
-            <div class="node-name">${node.name}</div>
-            <div class="node-status ${node.status}">${node.status}</div>
-          </div>
-          <div class="node-desc">${node.description}</div>
-          ${resourcesHTML ? `<div class="node-resources">${resourcesHTML}</div>` : ''}
-          <div class="node-footer">
-            <div class="duration-badge"><i class="fas fa-clock"></i> ~${node.durationWeeks || 1} week${(node.durationWeeks || 1) !== 1 ? 's' : ''}</div>
-            <div class="difficulty">${dots}</div>
-          </div>
+      const nodeCard = document.createElement('div');
+      nodeCard.className = `node-card ${node.status === 'core' ? 'highlight' : ''}`;
+      nodeCard.style.width = '100%';
+      nodeCard.style.boxSizing = 'border-box';
+      nodeCard.style.breakInside = 'avoid';
+      nodeCard.innerHTML = `
+        <div class="node-top">
+          <div class="node-name">${escapeHtml(node.name) || 'Skill'}</div>
+          <div class="node-status ${node.status || 'optional'}">${node.status || 'optional'}</div>
+        </div>
+        <div class="node-desc">${escapeHtml(node.description) || 'Learn this essential skill.'}</div>
+        ${resourcesHTML ? `<div class="node-resources">${resourcesHTML}</div>` : ''}
+        <div class="node-footer">
+          <div class="duration-badge"><i class="fas fa-clock"></i> ~${node.durationWeeks || 1} week${(node.durationWeeks || 1) !== 1 ? 's' : ''}</div>
+          <div class="difficulty">${dots}</div>
         </div>
       `;
-    }).join('');
-
-    block.innerHTML = `
-      <div class="phase-header">
-        <div class="phase-num">${phase.phase}</div>
-        <div class="phase-title-wrap">
-          <h4>${phase.title}</h4>
-          <div class="phase-subtitle">${phase.subtitle || ''}</div>
-        </div>
-      </div>
-      <div class="nodes-grid">${nodesHTML}</div>
-    `;
+      nodesGrid.appendChild(nodeCard);
+    });
+    
+    block.innerHTML = headerHtml;
+    block.appendChild(nodesGrid);
     out.appendChild(block);
   });
 
@@ -1864,6 +1895,17 @@ function renderRoadmap(data) {
   document.getElementById('step3').classList.add('done');
   document.getElementById('step3').classList.remove('active');
   scheduleFeedback();
+}
+
+// Helper function to escape HTML and prevent XSS
+function escapeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function printRoadmap() {
@@ -2069,7 +2111,6 @@ function applySuggestion() {
 
 
 // ── FEEDBACK ─────────────────────────────────────────────────────────────────
-// Replace SHEET_URL below with your Google Apps Script Web App URL (see instructions)
 const FEEDBACK_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxNJP2k_xk-73oWmQ9ZKb9eC8ZTzKWAguMoH5i5CTZMZ0LmpCV7HkejPi3Pabjd0JVY/exec';
 
 let feedbackRating = 0;
@@ -2106,11 +2147,9 @@ async function submitFeedback() {
   const btn = document.getElementById('feedbackSubmit');
   btn.textContent = 'Sending...';
   btn.disabled = true;
-  // Hide close button while submitting
   const closeBtn = document.querySelector('.feedback-dismiss');
   if (closeBtn) { closeBtn.style.visibility = 'hidden'; closeBtn.disabled = true; }
 
-  // Save locally always
   const entry = {
     rating: feedbackRating,
     comment,
@@ -2119,14 +2158,12 @@ async function submitFeedback() {
     timestamp: new Date().toISOString()
   };
 
-  // Store in localStorage for local analytics
   try {
     const existing = JSON.parse(localStorage.getItem('sp_feedback') || '[]');
     existing.push(entry);
     localStorage.setItem('sp_feedback', JSON.stringify(existing));
   } catch(e) {}
 
-  // Send to Google Sheet via GET params (avoids CORS issues with Apps Script)
   if (FEEDBACK_SHEET_URL && FEEDBACK_SHEET_URL !== 'YOUR_GOOGLE_SCRIPT_URL') {
     try {
       const params = new URLSearchParams({
@@ -2145,13 +2182,11 @@ async function submitFeedback() {
 
   document.getElementById('feedbackForm').style.display = 'none';
   document.getElementById('feedbackThankyou').classList.add('show');
-  // Restore close button
   const closeBtn2 = document.querySelector('.feedback-dismiss');
   if (closeBtn2) { closeBtn2.style.visibility = 'visible'; closeBtn2.disabled = false; }
   setTimeout(() => closeFeedback(), 2000);
 }
 
-// Trigger feedback 4 seconds after roadmap renders
 function scheduleFeedback() {
   if (feedbackTimer) clearTimeout(feedbackTimer);
   feedbackTimer = setTimeout(() => openFeedback(), 4000);
