@@ -1,90 +1,108 @@
-# 🗺️ SkillPath – AI-Powered Personalized Learning Roadmaps
+# 🗺️ SkillPath — AI-Powered Personalized Learning Roadmaps
 
-**Stop guessing what to learn next. Start following a clear path.**
+**SkillPath** generates custom, step-by-step developer learning roadmaps using AI. Pick your target role, select your current skills, and get a personalized path with curated resources — in seconds.
 
-SkillPath is a web app that generates custom learning roadmaps based on your career goals and existing skills.
+🔗 **Live Demo:** [skill-path-swart.vercel.app](https://skill-path-swart.vercel.app/)
 
-🔗 **Live Demo:** https://skill-path-swart.vercel.app/
+---
 
-## Features
+## ✨ Features
 
-- 🎯 Smart Role Suggestion – Select skills first, AI suggests your best career path
-- 📚 100+ Skills across 6 categories
-- 🤖 AI-Generated Roadmaps with phases, resources, and time estimates
-- 📱 Fully Responsive – Works on mobile, tablet, desktop
+- **12 Target Roles** — Frontend, Backend, Full Stack, Data Scientist, ML Engineer, AI Engineer, DevOps, Cloud Architect, Cybersecurity, Data Engineer, Mobile Dev, Product Manager
+- **Smart Role Suggestion** — Automatically detects your best-fit role based on your selected skills
+- **3-Phase Roadmap** — Every roadmap is structured into logical phases with core, recommended, and optional skill nodes
+- **Curated Resources** — Each skill node includes real links to docs, YouTube tutorials, and courses
+- **Skill Search** — Instantly filter across 70+ skills across 6 categories
+- **Feedback System** — Star rating popup with responses stored in Google Sheets
+- **Export & Share** — Print or share your roadmap with one click
+- **Fully Responsive** — Works on mobile, tablet, and desktop
 
-## How It Works
+---
 
-1. Select your current skills
-2. Get an AI-suggested role (or pick your own)
-3. Receive a complete roadmap
+## 📸 Screenshots
 
-## Tech Stack
+### Home — Set Your Goal
+![SkillPath Home](screenshots/home.jpeg)
 
-- HTML5, CSS3, Vanilla JavaScript
-- Claude API (Anthropic)
-- CSS Grid & Flexbox
-- Vercel Hosting
+### Skill Selection with Auto Role Suggestion
+![Skill Selection](screenshots/skills.jpeg)
 
-## Run Locally
+### Generated Roadmap
+![Roadmap Output](screenshots/roadmap.jpeg)
 
-```bash
-git clone https://github.com/Safa-Jahangir/Skill.git
-cd Skill
-open index.html
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Vanilla HTML, CSS, JavaScript |
+| AI Backend | Claude API (claude-sonnet) via `/api/generate` |
+| Deployment | Vercel |
+| Feedback Storage | Google Sheets (via Google Apps Script) |
+| Icons | Font Awesome 6 |
+
+---
+
+## 🚀 How It Works
+
+1. **Select a target role** — choose from 12 developer career paths
+2. **Pick your current skills** — from 70+ skills across 6 categories (Foundational, Technologies, Languages, Conceptual, Soft Skills, Business)
+3. **Set your level** — Beginner, Intermediate, or Advanced
+4. **Generate** — Claude AI builds a 3-phase roadmap tailored to your exact skill gaps
+5. **Follow the path** — each node shows duration, difficulty, and direct resource links
+
+---
+
+## 📁 Project Structure
+
+```
+/
+├── index.html          # Main app (single-page, all CSS + JS inline)
+├── robots.txt          # SEO crawler instructions
+├── sitemap.xml         # Google sitemap
+├── api/
+│   └── generate.js     # Vercel serverless function — proxies Claude API
+└── googlea8246acd87f553c4.html  # Google Search Console verification
 ```
 
-## 🧠 What I Learned
+---
 
-Building SkillPath taught me:
+## 🔧 Running Locally
 
-- **CSS Grid responsiveness** – Fixed mobile overlap issues with media breakpoints
-- **AI prompt engineering** – Crafting prompts that return consistent JSON structures
-- **Vanilla JS state management** – No frameworks, just pure JavaScript
-- **Role suggestion algorithm** – Scoring skills against predefined role maps
+```bash
+# Clone the repo
+git clone https://github.com/Safa-Jahangir/Skill.git
+cd Skill
 
-## 🗺️ Roadmap (Future Features)
+# Install Vercel CLI
+npm install -g vercel
 
-- [ ] User accounts to save roadmaps
-- [ ] Progress tracking (check off completed skills)
-- [ ] Export roadmap as PDF
-- [ ] More skill categories and roles
-- [ ] Community roadmap sharing
+# Add your Anthropic API key
+echo "ANTHROPIC_API_KEY=your_key_here" > .env
 
-## 🤝 Contributing
+# Run locally
+vercel dev
+```
 
-Contributions are welcome! Feel free to:
+Then open `http://localhost:3000`
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+---
 
-## 📝 Feedback
+## 🌐 Deployment
 
-Loved it? Hated it? Found a bug?
+Deployed on **Vercel** with automatic deployments from the `main` branch. The `/api/generate` serverless function handles Claude API calls server-side so the API key is never exposed to the client.
 
-- Open an [issue](https://github.com/Safa-Jahangir/Skill/issues)
-- Or use the feedback form inside the app (⭐ rating + comment)
+---
+
+## 👩‍💻 Author
+
+**Safa Jahangir**  
+Software Engineering Student — Fatima Jinnah Women's University  
+[GitHub](https://github.com/Safa-Jahangir) · [LinkedIn](https://www.linkedin.com/in/safa-jahangir)
+
+---
 
 ## 📄 License
 
-MIT License – feel free to use, modify, and share.
-
-## 🙏 Acknowledgments
-
-- Anthropic for the Claude API
-- FontAwesome for icons
-- The open-source community for endless inspiration
-
-## 📬 Connect
-
-Built by [Safa Jahangir](https://github.com/Safa-Jahangir)
-
-[![GitHub](https://img.shields.io/badge/GitHub-Safa--Jahangir-181717?style=flat-square&logo=github)](https://github.com/Safa-Jahangir)
-
-**⭐ If this project helped you, consider giving it a star!**
-git clone https://github.com/Safa-Jahangir/Skill.git
-cd Skill
-open index.html
+MIT License — free to use and modify.
