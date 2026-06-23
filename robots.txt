@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://skill-path-swart.vercel.app/sitemap.xml
